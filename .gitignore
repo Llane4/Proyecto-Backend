@@ -8,3 +8,5 @@ venv/
 
 my_secret_key.txt
 data/
+
+.env
