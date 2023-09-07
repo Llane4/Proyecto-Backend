@@ -1,5 +1,6 @@
 from config import Config
 from flask import Flask
+from flask_cors import CORS
 from api.routes.user_bp import user_bp
 from api.routes.server_bp import server_bp
 from api.routes.user_server_bp import user_server_bp
@@ -12,4 +13,5 @@ def init_app():
     app.register_blueprint(server_bp)
     app.register_blueprint(user_server_bp)
     app.register_blueprint(message_bp)
+    CORS(app)
     return app

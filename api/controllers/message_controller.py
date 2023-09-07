@@ -58,3 +58,6 @@ class Message_Controller:
         )
         Message.send_to_channel(new_message) 
         return jsonify({'message': 'Usuario añadido exitosamente en el servidor'}), 201 
+    
+    """ Borrar mensaje """
+    """ Editar mensaje """

@@ -46,3 +46,21 @@ class UserController:
     def delete_user(cls, user_id):
         Users.delete_user(user_id)
         return {}, 204
+    
+    @classmethod
+    def login_user(cls):
+        data=request.json
+        user=Users(
+            username="",
+            email=data['email'],
+            login_password=data['login_password'],
+            name="",
+            lastname="",
+            birthday=""
+        )
+        result=Users.login_user(user)
+
+        if result :
+            return jsonify({'message': 'Usuario logeado exitosamente'}), 200
+        else: 
+            return jsonify({'error': 'No se pudo iniciar sesion'}), 404

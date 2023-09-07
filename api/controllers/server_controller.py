@@ -14,6 +14,24 @@ class ServerController:
         }), 200
         else:
             return jsonify({'message': 'Servidor no encontrado'}), 404
+
+    @classmethod    
+    def get_servers(cls):
+        servers=Servers.get_servers()
+        if servers:
+            serverlist=[]
+            for server in servers:
+                
+                aux={
+            'server_id': server.server_id,
+            'name_server': server.name_server,
+            'owner_id': server.owner_id,
+            'icon': ""}
+                serverlist.append(aux)
+            return jsonify(
+        serverlist), 200
+        else:
+            return jsonify({'message': 'Servidor no encontrado'}), 404
         
     @classmethod
     def create_server(cls):

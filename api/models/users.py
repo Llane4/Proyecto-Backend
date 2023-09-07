@@ -45,3 +45,12 @@ class Users:
         query = "DELETE FROM user WHERE id=%s;"
         params = (user_id ,)
         DatabaseConnection.execute_query(query, params)
+
+    def login_user(user):
+        query = "SELECT id FROM user WHERE email = %s AND login_password=%s;"
+        params = (user.email, user.login_password)
+        result = DatabaseConnection.fetch_one(query, params)
+        if result is not None:
+            return True
+        else:
+            return False

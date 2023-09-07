@@ -22,7 +22,24 @@ class Servers:
         else:
             return None
         
-    
+    def get_servers():
+        query = "SELECT id, name_server, owner_id, icon FROM server;"
+        results = DatabaseConnection.fetch_all(query)
+
+        if results is not None:
+            
+            users=[]
+            for result in results:
+                users.append((
+                    Servers(
+                server_id=result[0],
+                name_server=result[1],
+                owner_id=result[2],
+                icon=result[3],
+            )))
+            return users
+        else:
+            return None
     def create_server(server):
         query = "INSERT INTO server (name_server, owner_id, icon) VALUES (%s,%s,%s);"
         params = (server.name_server, server.owner_id, server.icon)
