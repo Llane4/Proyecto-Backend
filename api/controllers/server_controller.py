@@ -1,7 +1,9 @@
-from flask import jsonify, request
+from flask import jsonify, request, session
 from ..models.servers import Servers
 
 class ServerController:
+
+    """ Funcion para conseguir la informacion de un server con su ID """
     @classmethod
     def get_server(cls, server_id):
         server=Servers.get_server(server_id)
@@ -15,6 +17,7 @@ class ServerController:
         else:
             return jsonify({'message': 'Servidor no encontrado'}), 404
 
+    """ Funcion para conseguir todos los servers """
     @classmethod    
     def get_servers(cls):
         servers=Servers.get_servers()
@@ -32,7 +35,8 @@ class ServerController:
         serverlist), 200
         else:
             return jsonify({'message': 'Servidor no encontrado'}), 404
-        
+
+    """ Funcion para crear un server, los datos de este se envian en un JSON """ 
     @classmethod
     def create_server(cls):
         data = request.json
@@ -44,6 +48,7 @@ class ServerController:
         Servers.create_server(new_server) 
         return jsonify({'message': 'Servidor creado exitosamente'}), 201 
     
+    """ Funcion para editar un server con su ID, los datos a actualizar se envian en un JSON """
     @classmethod
     def update_server(cls, server_id):
         server = Servers.get_server(server_id)
@@ -58,11 +63,20 @@ class ServerController:
         Servers.update_server(server_id, server)
         return jsonify({'message': 'Servidor actualizado exitosamente'}), 200
     
+    """ Funcion para eliminar un server con su ID, debe agregarse que solo el owner_id pueda borrarlo """
     @classmethod
     def delete_server(cls, server_id):
-        Servers.delete_server(server_id)
-        return {}, 204
+        result=Servers.get_server(server_id)
+        if result is None:
+            return jsonify({'error': 'No existe un server con esta ID'}), 400
+        owner_id=result.owner_id
+        if session['user_id']==owner_id:
+            Servers.delete_server(server_id)
+            return {}, 204
+        else:
+            return jsonify({'error': 'No tienes permisos para eliminar este server'}), 400
     
+    """ Funcion para que un usuario se una a un server """
     def add_user(cls, server_id, user_id):
         Servers.add_server(server_id, user_id)
         return {}, 200

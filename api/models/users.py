@@ -30,6 +30,17 @@ class Users:
         else:
             return None
         
+    def get_id(email):
+        query="SELECT id FROM user WHERE email=%s"
+        params=(email,)
+        result = DatabaseConnection.fetch_one(query, params)
+        if result is not None:
+            return Users(
+                user_id=result[0]
+            )
+        else:
+            return None
+    
     
     def create_user(user):
         query = "INSERT INTO user (username, email, login_password, name, lastname, birthday) VALUES (%s,%s,%s, %s, %s, %s);"
@@ -54,3 +65,5 @@ class Users:
             return True
         else:
             return False
+    
+    

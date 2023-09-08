@@ -26,7 +26,16 @@ class Message:
             
         else:
             return None
-        
+
+    def get_sender_id(message_id):
+        query="SELECT sender_id FROM message WHERE id=%s"
+        params=(message_id, )
+        results=DatabaseConnection.fetch_one(query, params)
+        if results is not None:
+            return results[0]
+            
+        else:
+            return None
     def send_message(new_message):
         query = "INSERT INTO message (sender_id, receiver_id, content, send_day) VALUES (%s,%s,%s,NOW());"
         params = (new_message.sender_id, new_message.receiver_id, new_message.content)
@@ -38,4 +47,16 @@ class Message:
         params = (new_message.sender_id, new_message.receiver_id, new_message.content)
         DatabaseConnection.execute_query(query, params) 
 
-        
+    
+    def delete_message(message_id):
+        query = "DELETE FROM message WHERE id=%s;"
+        params = (message_id ,)
+        DatabaseConnection.execute_query(query, params)
+
+    def edit_message(message_id, content):
+        query= "UPDATE message SET content=%s, edited=NOW() WHERE id=%s"
+        params=(content.content, message_id,  )
+        print(content.content)
+        DatabaseConnection.execute_query(query, params)
+
+
