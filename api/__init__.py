@@ -5,6 +5,7 @@ from api.routes.user_bp import user_bp
 from api.routes.server_bp import server_bp
 from api.routes.user_server_bp import user_server_bp
 from api.routes.message_bp import message_bp
+from api.routes.channel_bp import channel_bp
 
 
 def init_app():
@@ -14,5 +15,6 @@ def init_app():
     app.register_blueprint(server_bp)
     app.register_blueprint(user_server_bp)
     app.register_blueprint(message_bp)
+    app.register_blueprint(channel_bp)
     CORS(app)
     return app

@@ -23,8 +23,7 @@ class ServerController:
         servers=Servers.get_servers()
         if servers:
             serverlist=[]
-            for server in servers:
-                
+            for server in servers: 
                 aux={
             'server_id': server.server_id,
             'name_server': server.name_server,
@@ -54,12 +53,10 @@ class ServerController:
         server = Servers.get_server(server_id)
         if not server:
             return jsonify({'message': 'Servidor no encontrado'}), 404
-
         data = request.json
         server.name_server = data.get('name_server', server.name_server) if data.get('name_server') is not None else server.name_server
         server.owner_id = data.get('owner_id', server.owner_id) if data.get('owner_id') is not None else server.owner_id
         server.icon = data.get('icon', server.icon) if data.get('icon') is not None else server.icon
-        print("PRINT USER", data)
         Servers.update_server(server_id, server)
         return jsonify({'message': 'Servidor actualizado exitosamente'}), 200
     

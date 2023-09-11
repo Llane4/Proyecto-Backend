@@ -8,10 +8,7 @@ class Message_Controller:
         messages=Message.get_messages(sender_id, receiver_id)
         if messages:
             messages_list=[]
-            print(messages)
-            
             for message in messages:
-                print("USEEEEEEEEEEER",message.content)
                 aux={
                     'content': message.content,
                     'send_day':message.send_day,
@@ -27,9 +24,7 @@ class Message_Controller:
         messages=Message.get_messages(receiver_id)
         if messages:
             messages_list=[]
-            
             for message in messages:
-                print("USEEEEEEEEEEER",message)
                 aux={
                     'server_id': message[0].content,
                     'user_id':message[0].send_day,
@@ -67,8 +62,7 @@ class Message_Controller:
     
     """ Borrar mensaje """
     @classmethod 
-    def delete_message(cls, message_id):
-        
+    def delete_message(cls, message_id):   
         sender_id=Message.get_sender_id(message_id)
         print(sender_id, session['user_id'])
         if(sender_id==session['user_id']):

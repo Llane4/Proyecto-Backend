@@ -7,8 +7,6 @@ class UserController:
     @classmethod
     def get_user(cls, user_id):
         user=Users.get_user(user_id)
-        print(session['email'])
-        print(session['user_id'])
         if user:
             return jsonify({
             'user_id': user.user_id,
@@ -27,6 +25,7 @@ class UserController:
         }), 200
         else:
             return jsonify({'message': 'Usuario no encontrado'}), 404
+        
     """ Funcion para crear un user, los datos de este se envian en un JSON, agregar verificacion de si ya existe un user con el email enviado """
     @classmethod
     def create_user(cls):
@@ -57,7 +56,6 @@ class UserController:
         user.username = data.get('username', user.username) if data.get('username') is not None else user.username
         user.email = data.get('email', user.email) if data.get('email') is not None else user.email
         user.login_password = data.get('login_password', user.login_password) if data.get('login_password') is not None else user.login_password
-        print("PRINT USER", data)
         Users.update_user(user_id, user)
         return jsonify({'message': 'Usuario actualizado exitosamente'}), 200
     
