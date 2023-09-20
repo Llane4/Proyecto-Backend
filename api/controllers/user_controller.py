@@ -1,5 +1,7 @@
 from flask import jsonify, request, session
 from ..models.users import Users
+from ..utils.session_utils import is_logged, verify_user
+from ..models.exceptions import IsNotTheOwner, IsNotLogged, NotFound
 
 class UserController:
 
@@ -14,7 +16,7 @@ class UserController:
             'email': user.email
         }), 200
         else:
-            return jsonify({'message': 'Usuario no encontrado'}), 404
+            raise NotFound(description=f'No se encontro al usuario con el ID: {user_id}')
 
     @classmethod
     def get_id(cls, email):
@@ -24,7 +26,7 @@ class UserController:
             'user_id': user.user_id,
         }), 200
         else:
-            return jsonify({'message': 'Usuario no encontrado'}), 404
+            return None
         
     """ Funcion para crear un user, los datos de este se envian en un JSON, agregar verificacion de si ya existe un user con el email enviado """
     @classmethod
@@ -39,8 +41,9 @@ class UserController:
             birthday=data['birthday']
         )
         exist=Users.get_id(new_user.email)
+        """ Agregar Error handler """
         if exist is not None:
-            return jsonify({'message': 'Este correo ya esta en uso'}), 404
+            return jsonify({'error': 'Este correo ya esta en uso'}), 404
         else:
             Users.create_user(new_user) 
             return jsonify({'message': 'Usuario creado exitosamente'}), 201 
@@ -56,16 +59,22 @@ class UserController:
         user.username = data.get('username', user.username) if data.get('username') is not None else user.username
         user.email = data.get('email', user.email) if data.get('email') is not None else user.email
         user.login_password = data.get('login_password', user.login_password) if data.get('login_password') is not None else user.login_password
-        Users.update_user(user_id, user)
-        return jsonify({'message': 'Usuario actualizado exitosamente'}), 200
+        if is_logged() and verify_user(user_id):
+            Users.update_user(user_id, user)
+            return jsonify({'message': 'Usuario actualizado exitosamente'}), 200
+        else:
+            return jsonify({'error': 'No tienes los permisos para actualizar a este usuario'}), 400
     
     """ Funcion para borrar usuario con su ID """
     @classmethod
     def delete_user(cls, user_id):
-        Users.delete_user(user_id)
-        return {}, 204
-    
+        if is_logged() and verify_user(user_id):
+            Users.delete_user(user_id)
+            return {}, 204
+        else:
+            return jsonify({'error': 'No tienes los permisos para borrar a este usuario'}), 400
     """ Funcion para logear a un usuario con su username y login_password, agregar manejo de sesiones """
+
     @classmethod
     def login_user(cls):
         data=request.json
@@ -90,7 +99,7 @@ class UserController:
     @classmethod
     def log_out(cls):
         if session['email'] == "":
-            return jsonify({'error': 'No hay un usuario logeado'}), 404
+            raise IsNotLogged(description="No hay un usuario logeado")
         else:
             session['email']=""
             session['user_id']=""

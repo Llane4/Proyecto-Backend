@@ -1,5 +1,6 @@
 from flask import jsonify, request, session 
 from ..models.message import Message
+from ..utils.session_utils import verify_user, is_logged
 
 class Message_Controller:
     """ Funcion para conseguir todos los mensajes entre dos usuarios """
@@ -65,8 +66,7 @@ class Message_Controller:
     def delete_message(cls, message_id):   
         sender_id=Message.get_sender_id(message_id)
         print(sender_id, session['user_id'])
-        if(sender_id==session['user_id']):
-
+        if is_logged() and verify_user(sender_id):
             Message.delete_message(message_id)
             return {}, 204
         else:
@@ -77,12 +77,17 @@ class Message_Controller:
     @classmethod
     def edit_message(cls, message_id):
         data = request.json
+        sender_id=Message.get_sender_id(message_id)
+
         new_message = Message(
             sender_id="",
             receiver_id="",
             content=data['content'],
             send_day=""
         )
-        Message.edit_message(message_id, new_message)
-        return {}, 204
+        if is_logged() and verify_user(sender_id):
+            Message.edit_message(message_id, new_message)
+            return {}, 204
+        else:
+            return jsonify({'error': "No tienes los permisos para editar este mensaje"}), 400
 

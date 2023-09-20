@@ -1,5 +1,7 @@
 from flask import jsonify, request, session
 from ..models.servers import Servers
+from ..utils.session_utils import is_logged, verify_user, is_owner
+from ..models.exceptions import IsNotLogged, IsNotTheOwner
 
 class ServerController:
 
@@ -57,8 +59,14 @@ class ServerController:
         server.name_server = data.get('name_server', server.name_server) if data.get('name_server') is not None else server.name_server
         server.owner_id = data.get('owner_id', server.owner_id) if data.get('owner_id') is not None else server.owner_id
         server.icon = data.get('icon', server.icon) if data.get('icon') is not None else server.icon
-        Servers.update_server(server_id, server)
-        return jsonify({'message': 'Servidor actualizado exitosamente'}), 200
+        if is_logged(): 
+            if is_owner(server.owner_id):
+                Servers.update_server(server_id, server)
+                return jsonify({'message': 'Servidor actualizado exitosamente'}), 200
+            else:
+                raise IsNotTheOwner(description='No tienes los permisos para actualizar este servidor')
+        else:
+            raise IsNotLogged(description='No se encuentra en una sesion')
     
     """ Funcion para eliminar un server con su ID, debe agregarse que solo el owner_id pueda borrarlo """
     @classmethod
@@ -67,11 +75,14 @@ class ServerController:
         if result is None:
             return jsonify({'error': 'No existe un server con esta ID'}), 400
         owner_id=result.owner_id
-        if session['user_id']==owner_id:
-            Servers.delete_server(server_id)
-            return {}, 204
+        if is_logged(): 
+            if is_owner(owner_id):
+                Servers.delete_server(server_id)
+                return {}, 204
+            else:
+                raise IsNotTheOwner(description='No tienes los permisos para borrar este servidor')
         else:
-            return jsonify({'error': 'No tienes permisos para eliminar este server'}), 400
+            raise IsNotLogged(description='No se encuentra en una sesion')
     
     """ Funcion para que un usuario se una a un server """
     def add_user(cls, server_id, user_id):
