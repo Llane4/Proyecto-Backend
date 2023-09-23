@@ -40,6 +40,7 @@ class Servers:
             return users
         else:
             return None
+        
     def create_server(server):
         query = "INSERT INTO server (name_server, owner_id, icon) VALUES (%s,%s,%s);"
         params = (server.name_server, server.owner_id, server.icon)
@@ -57,3 +58,22 @@ class Servers:
 
     def add_user(server_id, user_id):
         user= ""
+
+    def search_servers(server_name):
+        query = f"SELECT id, name_server, owner_id, icon FROM server WHERE name_server LIKE '%{server_name}%';"
+        results = DatabaseConnection.fetch_all(query)
+
+        if results is not None:
+            
+            users=[]
+            for result in results:
+                users.append((
+                    Servers(
+                server_id=result[0],
+                name_server=result[1],
+                owner_id=result[2],
+                icon=result[3],
+            )))
+            return users
+        else:
+            return None

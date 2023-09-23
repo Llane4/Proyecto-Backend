@@ -88,3 +88,20 @@ class ServerController:
     def add_user(cls, server_id, user_id):
         Servers.add_server(server_id, user_id)
         return {}, 200
+    
+    @classmethod
+    def search_servers(cls, server_name):
+        servers=Servers.search_servers(server_name)
+        if servers:
+            serverlist=[]
+            for server in servers: 
+                aux={
+            'server_id': server.server_id,
+            'name_server': server.name_server,
+            'owner_id': server.owner_id,
+            'icon': ""}
+                serverlist.append(aux)
+            return jsonify(
+        serverlist), 200
+        else:
+            return jsonify({'message': 'Servidor no encontrado'}), 404

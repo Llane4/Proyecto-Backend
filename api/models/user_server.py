@@ -1,5 +1,5 @@
 from ..database import DatabaseConnection
-from flask import request
+from flask import request, session
 
 class User_Server:
     def __init__(self, server_id=None, user_id=None):
@@ -33,6 +33,30 @@ class User_Server:
         query = "INSERT INTO user_server (user_id, server_id) VALUES (%s,%s);"
         params = (new_user_in_server.user_id, new_user_in_server.server_id)
         DatabaseConnection.execute_query(query, params)
+
+    def get_my_servers():
+        print(session['user_id'])
+        query = """SELECT server_id, user_id, name_server FROM user_server
+                   JOIN discord.server ON discord.server.id = discord.user_server.server_id
+                   WHERE user_id = %s;"""
+        params = (session['user_id'],)
+        results = DatabaseConnection.fetch_all(query, params)
+        if results is not None:
+            print("USERR", results[0][0])
+            users=[]
+            for result in results:
+                users.append((
+                    User_Server(
+                        server_id=result[0],
+                        user_id=result[1],
+                ), {
+                    'name_server':result[2]
+                    
+                }))
+            return users
+        else:
+            return None
+    
 
         
     

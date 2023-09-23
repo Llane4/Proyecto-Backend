@@ -66,3 +66,7 @@ class Channel:
         query= "UPDATE channel SET name_channel= %s WHERE id=%s"
         params=(name_channel, channel_id,)
         DatabaseConnection.execute_query(query, params)
+
+    
+    
+

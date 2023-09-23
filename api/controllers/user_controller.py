@@ -77,6 +77,7 @@ class UserController:
 
     @classmethod
     def login_user(cls):
+        print("Intento de login")
         data=request.json
         user=Users(
             username="",
@@ -92,7 +93,9 @@ class UserController:
             user_id=Users.get_id(user.email)
             session['email']=user.email
             session['user_id']=user_id.user_id
-            return jsonify({'message': f'Usuario logeado exitosamente'}), 200
+            print(session['email'], "deberia ser email")
+            
+            return jsonify(is_logged())
         else: 
             return jsonify({'error': 'No se pudo iniciar sesion'}), 404
         
@@ -104,3 +107,10 @@ class UserController:
             session['email']=""
             session['user_id']=""
             return jsonify({'message': 'Usuario cerro sesion exitosamente'}), 200
+        
+    @classmethod
+    def ver_sesion(cls):
+        if is_logged():
+            return jsonify({'message': 'Estas logeado'})
+        else:
+            raise IsNotLogged(description="No hay un usuario logeado") 
