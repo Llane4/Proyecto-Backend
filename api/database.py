@@ -42,4 +42,13 @@ class DatabaseConnection:
         cursor = connection.cursor()
         cursor.execute(query, params)
         connection.commit()
+
+    @classmethod
+    def execute_query_return_id(cls, query, params=None):
+        connection = cls.get_connection()
+        cursor = connection.cursor()
+        cursor.execute(query, params)
+        id=cursor._last_insert_id
+        connection.commit()
+        return id
         

@@ -1,6 +1,7 @@
 from flask import jsonify, request, session 
 from ..models.message import Message
 from ..utils.session_utils import verify_user, is_logged
+from ..models.exceptions import IsNotLogged, IsNotTheOwner
 
 class Message_Controller:
     """ Funcion para conseguir todos los mensajes entre dos usuarios """
@@ -22,13 +23,17 @@ class Message_Controller:
     """ Funcion para conseguir todos los mensajes de un canal """
     @classmethod
     def get_channel_messages(cls, receiver_id):
-        messages=Message.get_messages(receiver_id)
+        print("Receiver_id", receiver_id)
+        messages=Message.get_messages_channel(receiver_id)
         if messages:
             messages_list=[]
+            print("MENSAJES", messages)
             for message in messages:
                 aux={
-                    'server_id': message[0].content,
-                    'user_id':message[0].send_day,
+                    'content': message[0].content,
+                    'date':message[0].send_day,
+                    'username': message[1]["username"],
+                    'avatar': message[1]['avatar']
                 }
                 messages_list.append(aux)
             return jsonify(messages_list), 200
@@ -52,14 +57,16 @@ class Message_Controller:
     @classmethod    
     def send_message_channel(cls): 
         data = request.json
-        new_message = Message(
-            sender_id=data['sender_id'],
-            receiver_id=data['receiver_id'],
-            content=data['content'],
-            send_day=data['send_day']
-        )
-        Message.send_to_channel(new_message) 
-        return jsonify({'message': 'Usuario añadido exitosamente en el servidor'}), 201 
+        if is_logged():
+            new_message = Message(
+                sender_id=session.get('user_id'),
+                receiver_id=data['receiver_id'],
+                content=data['content']
+            )
+            Message.send_to_channel(new_message) 
+            return jsonify({'message': 'Mensaje mandado exitosamente al canal'}), 201 
+        else:
+            raise IsNotLogged(description='No se encuentra en una sesion') 
     
     """ Borrar mensaje """
     @classmethod 

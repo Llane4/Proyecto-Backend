@@ -2,6 +2,7 @@ from flask import jsonify, request, session
 from ..models.servers import Servers
 from ..utils.session_utils import is_logged, verify_user, is_owner
 from ..models.exceptions import IsNotLogged, IsNotTheOwner
+from .user_server_controller import User_Server_Controller
 
 class ServerController:
 
@@ -22,6 +23,7 @@ class ServerController:
     """ Funcion para conseguir todos los servers """
     @classmethod    
     def get_servers(cls):
+        print("LLEga a get_servers")
         servers=Servers.get_servers()
         if servers:
             serverlist=[]
@@ -30,7 +32,7 @@ class ServerController:
             'server_id': server.server_id,
             'name_server': server.name_server,
             'owner_id': server.owner_id,
-            'icon': ""}
+            'icon': server.icon}
                 serverlist.append(aux)
             return jsonify(
         serverlist), 200
@@ -41,14 +43,17 @@ class ServerController:
     @classmethod
     def create_server(cls):
         data = request.json
-        new_server = Servers(
-            name_server=data['name_server'],
-            owner_id=data['owner_id'],
-            icon=data['icon']
-        )
-        Servers.create_server(new_server) 
-        return jsonify({'message': 'Servidor creado exitosamente'}), 201 
-    
+        print(data)
+        if is_logged():
+            new_server = Servers(
+                name_server=data['name_server'],
+                owner_id=session.get('user_id'),
+                icon=data['icon']
+            )
+            server_id=Servers.create_server(new_server) 
+            return jsonify({'message': 'Servidor creado exitosamente', "id": server_id}), 201 
+        else:
+            raise IsNotLogged(description='No se encuentra en una sesion') 
     """ Funcion para editar un server con su ID, los datos a actualizar se envian en un JSON """
     @classmethod
     def update_server(cls, server_id):

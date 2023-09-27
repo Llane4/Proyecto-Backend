@@ -23,6 +23,7 @@ class Servers:
             return None
         
     def get_servers():
+        print("LLEGA A GET SERVERS")
         query = "SELECT id, name_server, owner_id, icon FROM server;"
         results = DatabaseConnection.fetch_all(query)
 
@@ -44,7 +45,8 @@ class Servers:
     def create_server(server):
         query = "INSERT INTO server (name_server, owner_id, icon) VALUES (%s,%s,%s);"
         params = (server.name_server, server.owner_id, server.icon)
-        DatabaseConnection.execute_query(query, params)
+        id = DatabaseConnection.execute_query_return_id(query, params)
+        return id
 
     def update_server(server_id, server):
         query= "UPDATE server SET name_server= %s, owner_id=%s, icon=%s WHERE id=%s"

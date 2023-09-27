@@ -7,16 +7,21 @@ class UserController:
 
     """ Funcion para conseguir la informacion de un user con su ID """
     @classmethod
-    def get_user(cls, user_id):
-        user=Users.get_user(user_id)
-        if user:
-            return jsonify({
-            'user_id': user.user_id,
-            'username': user.username,
-            'email': user.email
-        }), 200
+    def get_user(cls):
+        if is_logged():
+            user_id=session.get('user_id')
+            user=Users.get_user(user_id)
+            if user:
+                return jsonify({
+                'user_id': user.user_id,
+                'username': user.username,
+                'email': user.email,
+                'avatar': user.avatar
+            }), 200
+            else:
+                raise NotFound(description=f'No se encontro al usuario con el ID: {user_id}')
         else:
-            raise NotFound(description=f'No se encontro al usuario con el ID: {user_id}')
+            raise IsNotLogged(description="No hay un usuario logeado")
 
     @classmethod
     def get_id(cls, email):
@@ -93,9 +98,9 @@ class UserController:
             user_id=Users.get_id(user.email)
             session['email']=user.email
             session['user_id']=user_id.user_id
-            print(session['email'], "deberia ser email")
             
-            return jsonify(is_logged())
+            
+            return jsonify({'error': 'Inicio de sesion con exito'})
         else: 
             return jsonify({'error': 'No se pudo iniciar sesion'}), 404
         
@@ -110,7 +115,10 @@ class UserController:
         
     @classmethod
     def ver_sesion(cls):
+        
         if is_logged():
-            return jsonify({'message': 'Estas logeado'})
+            sesion=session.get('email')
+            id=session.get('user_id')
+            return jsonify({'sesion':sesion, 'id':id})
         else:
             raise IsNotLogged(description="No hay un usuario logeado") 

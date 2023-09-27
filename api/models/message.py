@@ -1,5 +1,6 @@
 from ..database import DatabaseConnection
 from flask import request
+from datetime import datetime
 
 class Message:
     def __init__(self, sender_id=None, receiver_id=None, content=None, send_day=None):
@@ -22,6 +23,31 @@ class Message:
                 ))
 
             print("ESTO ES ARRAY?",messages)
+            return messages
+            
+        else:
+            return None
+    
+    def get_messages_channel(receiver_id):
+        query = """SELECT content, send_day, username, avatar FROM channel_message
+                   JOIN discord.user ON discord.user.id = discord.channel_message.sender_id
+                   WHERE receiver_id = %s;"""
+        params = (receiver_id, )
+        results = DatabaseConnection.fetch_all(query, params)
+        if results is not None:
+            messages=[]
+            for result in results:
+                print(result[1])
+                date = str(result[1])
+                messages.append((
+                    Message(
+                        content=result[0],
+                        send_day=date
+                ), {
+                    'username':result[2],
+                    'avatar': result[3]
+                }))
+
             return messages
             
         else:

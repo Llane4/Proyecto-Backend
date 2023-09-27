@@ -1,5 +1,7 @@
 from flask import jsonify, request, session 
 from ..models.channels import Channel
+from ..utils.session_utils import is_logged, verify_user, is_owner
+from ..models.exceptions import IsNotLogged, IsNotTheOwner
 
 class Channel_Controller:
 
@@ -25,12 +27,13 @@ class Channel_Controller:
     @classmethod
     def create_channel(cls):
         data = request.json
-        new_channel= Channel(
-            name_channel=data['name_channel'],
-            owner_id=data['owner_id']
-        )
-        Channel.create_channel(new_channel.name_channel, data['server_id'], new_channel.owner_id)
-        return jsonify({'message': 'Canal creado exitosamente'}), 201
+        if is_logged():
+            new_channel= Channel(
+                name_channel=data['name_channel'],
+                owner_id=session.get('user_id')
+            )
+            Channel.create_channel(new_channel.name_channel, data['server_id'], new_channel.owner_id)
+            return jsonify({'message': 'Canal creado exitosamente'}), 201
 
 
     @classmethod

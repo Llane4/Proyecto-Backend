@@ -35,8 +35,8 @@ class User_Server:
         DatabaseConnection.execute_query(query, params)
 
     def get_my_servers():
-        print(session['user_id'])
-        query = """SELECT server_id, user_id, name_server FROM user_server
+        print(session)
+        query = """SELECT server_id, user_id, name_server, icon FROM user_server
                    JOIN discord.server ON discord.server.id = discord.user_server.server_id
                    WHERE user_id = %s;"""
         params = (session['user_id'],)
@@ -50,7 +50,8 @@ class User_Server:
                         server_id=result[0],
                         user_id=result[1],
                 ), {
-                    'name_server':result[2]
+                    'name_server':result[2],
+                    'icon': result[3]
                     
                 }))
             return users
