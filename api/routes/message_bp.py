@@ -9,3 +9,4 @@ message_bp.route('/send_message', methods = ['POST'])(Message_Controller.send_me
 message_bp.route('/send_message_channel', methods = ['POST'])(Message_Controller.send_message_channel)
 message_bp.route('/update_message/<int:message_id>', methods = ['PUT'])(Message_Controller.edit_message)
 message_bp.route('/delete_message/<int:message_id>', methods = ['DELETE'])(Message_Controller.delete_message)
+message_bp.route('/delete_message_channel/<int:message_id>', methods = ['DELETE'])(Message_Controller.delete_message_channel)

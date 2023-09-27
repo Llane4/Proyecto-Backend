@@ -29,7 +29,7 @@ class Message:
             return None
     
     def get_messages_channel(receiver_id):
-        query = """SELECT content, send_day, username, avatar FROM channel_message
+        query = """SELECT content, send_day, username, avatar, discord.channel_message.id FROM channel_message
                    JOIN discord.user ON discord.user.id = discord.channel_message.sender_id
                    WHERE receiver_id = %s;"""
         params = (receiver_id, )
@@ -45,7 +45,8 @@ class Message:
                         send_day=date
                 ), {
                     'username':result[2],
-                    'avatar': result[3]
+                    'avatar': result[3],
+                    'id': result[4]
                 }))
 
             return messages
@@ -55,6 +56,16 @@ class Message:
 
     def get_sender_id(message_id):
         query="SELECT sender_id FROM message WHERE id=%s"
+        params=(message_id, )
+        results=DatabaseConnection.fetch_one(query, params)
+        if results is not None:
+            return results[0]
+            
+        else:
+            return None
+        
+    def get_sender_id_channel(message_id):
+        query="SELECT sender_id FROM channel_message WHERE id=%s"
         params=(message_id, )
         results=DatabaseConnection.fetch_one(query, params)
         if results is not None:
@@ -76,6 +87,11 @@ class Message:
     
     def delete_message(message_id):
         query = "DELETE FROM message WHERE id=%s;"
+        params = (message_id ,)
+        DatabaseConnection.execute_query(query, params)
+
+    def delete_message_channel(message_id):
+        query = "DELETE FROM channel_message WHERE id=%s;"
         params = (message_id ,)
         DatabaseConnection.execute_query(query, params)
 

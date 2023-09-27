@@ -33,7 +33,8 @@ class Message_Controller:
                     'content': message[0].content,
                     'date':message[0].send_day,
                     'username': message[1]["username"],
-                    'avatar': message[1]['avatar']
+                    'avatar': message[1]['avatar'],
+                    'id': message[1]['id']
                 }
                 messages_list.append(aux)
             return jsonify(messages_list), 200
@@ -77,7 +78,18 @@ class Message_Controller:
             Message.delete_message(message_id)
             return {}, 204
         else:
-            return jsonify({"error": "No tiene permisos para borrar este mensaje"}), 400
+            return jsonify({"error": "No tiene permisos para borrar este mensaje"}), 404
+        
+    """ Borrar mensaje canales"""
+    @classmethod 
+    def delete_message_channel(cls, message_id):   
+        sender_id=Message.get_sender_id_channel(message_id)
+        print(sender_id, session['user_id'])
+        if is_logged() and verify_user(sender_id):
+            Message.delete_message_channel(message_id)
+            return {}, 204
+        else:
+            return jsonify({"error": "No tiene permisos para borrar este mensaje"}), 404
         
 
     """ Editar mensaje """

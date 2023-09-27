@@ -16,7 +16,9 @@ class UserController:
                 'user_id': user.user_id,
                 'username': user.username,
                 'email': user.email,
-                'avatar': user.avatar
+                'avatar': user.avatar,
+                'first_name': user.name,
+                'last_name': user.lastname
             }), 200
             else:
                 raise NotFound(description=f'No se encontro al usuario con el ID: {user_id}')
