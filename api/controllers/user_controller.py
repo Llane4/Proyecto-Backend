@@ -57,7 +57,8 @@ class UserController:
     
     """ Funcion para actualizar informacion de un user, falta agregar que solo se pueda actualizar la informacion propia """
     @classmethod
-    def update_user(cls, user_id):
+    def update_user(cls):
+        user_id=session.get('user_id')
         user = Users.get_user(user_id)
         if not user:
             return jsonify({'message': 'Usuario no encontrado'}), 404
