@@ -28,6 +28,18 @@ class User_Server:
         else:
             return None
         
+    def get_user(new_user_in_server):
+        query = """SELECT server_id, user_id FROM user_server
+                   WHERE server_id = %s AND user_id= %s;"""
+        params = (new_user_in_server.server_id, new_user_in_server.user_id)
+        print(params)
+        results = DatabaseConnection.fetch_one(query, params)
+        print("UN USUARIO?", results)
+        if results is None:
+            return True
+        else:
+            return False
+        
     
     def add_user(new_user_in_server):
         query = "INSERT INTO user_server (user_id, server_id) VALUES (%s,%s);"

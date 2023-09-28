@@ -65,5 +65,10 @@ class Users:
             return True
         else:
             return False
+        
+    def update_password(user_id, new_password):
+        query= "UPDATE user SET login_password=%s WHERE id=%s"
+        params= (new_password ,user_id)
+        DatabaseConnection.execute_query(query, params)
     
     

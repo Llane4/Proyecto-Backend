@@ -30,10 +30,15 @@ class User_Server_Controller:
                 server_id=data['server_id'],
                 user_id=session.get('user_id')
             )
-            User_Server.add_user(new_user_in_server) 
-            return jsonify({'message': 'Usuario añadido exitosamente en el servidor'}), 201 
+            exist=User_Server.get_user(new_user_in_server)
+            print(exist)
+            if exist== False:                
+                return jsonify({'error': 'No se pudo añadir al usuario'}), 400
+            else:
+                User_Server.add_user(new_user_in_server) 
+                return jsonify({'message': 'Usuario añadido exitosamente en el servidor'}), 201
         else:
-            return jsonify({'error': 'El usuario no fue añadido a su propio server'}), 400 
+            return jsonify({'error': 'El usuario no fue añadido al servidor'}), 400 
     
     @classmethod
     def get_my_servers(cls):
@@ -55,7 +60,7 @@ class User_Server_Controller:
                     user_list.append(aux)
                 return jsonify(user_list), 200
             else:
-                return jsonify({'message': 'Usuario no encontrado'}), 404
+                return jsonify({'error': 'No se encontraron servidores'}), 404
         else:
             raise IsNotLogged(description='No se encuentra en una sesion')
         

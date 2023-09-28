@@ -18,7 +18,7 @@ class Message_Controller:
                 messages_list.append(aux)
             return jsonify(messages_list), 200
         else:
-            return jsonify({'message': 'Usuario no encontrado'}), 404
+            return jsonify({'message': 'No se encontraron mensajes'}), 404
     
     """ Funcion para conseguir todos los mensajes de un canal """
     @classmethod
@@ -39,7 +39,7 @@ class Message_Controller:
                 messages_list.append(aux)
             return jsonify(messages_list), 200
         else:
-            return jsonify({'message': 'Usuario no encontrado'}), 404  
+            return jsonify({'message': 'No se encontraron mensajes'}), 404  
 
     """ Funcion para enviar mensajes entre usuarios """  
     @classmethod    
@@ -87,7 +87,7 @@ class Message_Controller:
         print(sender_id, session['user_id'])
         if is_logged() and verify_user(sender_id):
             Message.delete_message_channel(message_id)
-            return {}, 204
+            return jsonify({"message": "Se borro el mensaje"}), 200
         else:
             return jsonify({"error": "No tiene permisos para borrar este mensaje"}), 404
         

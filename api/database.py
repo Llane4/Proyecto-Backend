@@ -26,29 +26,46 @@ class DatabaseConnection:
     @classmethod
     def fetch_one(cls, query, params=None):
         cursor=cls.get_connection().cursor()
-        cursor.execute(query, params)
-        return cursor.fetchone()
+        try:
+            cursor.execute(query, params)
+            return cursor.fetchone()
+        finally:
+            if cursor:
+                cursor.close()
     
     @classmethod
     def fetch_all(cls, query, params=None):
         cursor=cls.get_connection().cursor()
-        cursor.execute(query, params)
-        return cursor.fetchall()
+        try:
+            cursor.execute(query, params)
+            return cursor.fetchall()
+        finally:
+            if cursor:
+                cursor.close()
     
 
     @classmethod
     def execute_query(cls, query, params=None):
         connection = cls.get_connection()
-        cursor = connection.cursor()
-        cursor.execute(query, params)
-        connection.commit()
+        try:
+            cursor = connection.cursor()
+            cursor.execute(query, params)
+            connection.commit()
+        finally:
+            if cursor:
+                cursor.close()
 
     @classmethod
     def execute_query_return_id(cls, query, params=None):
         connection = cls.get_connection()
-        cursor = connection.cursor()
-        cursor.execute(query, params)
-        id=cursor._last_insert_id
-        connection.commit()
-        return id
+        try:
+            cursor = connection.cursor()
+            cursor.execute(query, params)
+            id=cursor._last_insert_id
+            connection.commit()
+            return id
+        finally:
+            if cursor:
+                cursor.close()
+        
         

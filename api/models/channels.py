@@ -34,7 +34,7 @@ class Channel:
                         id=result[2]
                 ))
 
-            print("ESTO ES ARRAY?",messages)
+            
             return messages
             
         else:
