@@ -48,8 +48,8 @@ class Users:
         DatabaseConnection.execute_query(query, params)
 
     def update_user(user_id, user):
-        query= "UPDATE user SET username= %s, email=%s, login_password=%s, name=%s, lastname=%s, birthday=%s WHERE id=%s"
-        params= (user.username, user.email, user.login_password,user.name, user.lastname, user.birthday ,user_id)
+        query= "UPDATE user SET username= %s, email=%s, login_password=%s, name=%s, lastname=%s, birthday=%s, avatar=%s WHERE id=%s"
+        params= (user.username, user.email, user.login_password,user.name, user.lastname, user.birthday, user.avatar ,user_id)
         DatabaseConnection.execute_query(query, params)
 
     def delete_user(user_id):
