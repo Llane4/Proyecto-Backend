@@ -64,12 +64,12 @@ class UserController:
             return jsonify({'message': 'Usuario no encontrado'}), 404
 
         data = request.json
-        user.username = data.get('username', user.username) if data.get('username') is not None else user.username
-        user.email = data.get('email', user.email) if data.get('email') is not None else user.email
-        user.avatar = data.get('avatar', user.avatar) if data.get('avatar') is not None else user.avatar
-        user.login_password = data.get('login_password', user.login_password) if data.get('login_password') is not None else user.login_password
-        user.name = data.get('name', user.name) if data.get('name') is not None else user.name
-        user.lastname = data.get('lastname', user.lastname) if data.get('lastname') is not None else user.lastname
+        user.username = data.get('username', user.username) if data.get('username') is not "" else user.username
+        user.email = data.get('email', user.email) if data.get('email') is not "" else user.email
+        user.avatar = data.get('avatar', user.avatar) if data.get('avatar') is not "" else user.avatar
+        user.login_password = data.get('login_password', user.login_password) if data.get('login_password') is not "" else user.login_password
+        user.name = data.get('name', user.name) if data.get('name') is not "" else user.name
+        user.lastname = data.get('lastname', user.lastname) if data.get('lastname') is not "" else user.lastname
         if is_logged() and verify_user(user_id):
             Users.update_user(user_id, user)
             return jsonify({'message': 'Usuario actualizado exitosamente'}), 200
