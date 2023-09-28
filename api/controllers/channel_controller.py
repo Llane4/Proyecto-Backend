@@ -21,7 +21,7 @@ class Channel_Controller:
             return jsonify(
         channellist), 200
         else:
-            return jsonify({'message': 'No se encontraron canales'}), 404
+            return jsonify({'error': 'No se encontraron canales'}), 400
         
 
     @classmethod
@@ -40,13 +40,13 @@ class Channel_Controller:
     def delete_channel(cls, channel_id):
         result=Channel.get_channel(channel_id)
         if result is None:
-            return jsonify({'error': 'No existe un server con esta ID'}), 400
+            return jsonify({'error': 'No existe un canal con esta ID'}), 400
         owner_id=result.owner_id
         if session['user_id']==owner_id:
             Channel.delete_channel(channel_id)
             return {}, 204
         else:
-            return jsonify({'error': 'No tienes permisos para eliminar este canal'}), 400
+            return jsonify({'error': 'No tienes permisos para eliminar este canal'}), 403
         
     @classmethod
     def update_channel(cls):
@@ -59,4 +59,4 @@ class Channel_Controller:
             Channel.update_channel(data['channel_id'], data['name_channel'])
             return {}, 204
         else:
-            return jsonify({'error': 'No tienes permisos para eliminar este canal'}), 400
+            return jsonify({'error': 'No tienes permisos para eliminar este canal'}), 403

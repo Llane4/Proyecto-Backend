@@ -50,7 +50,7 @@ class UserController:
         exist=Users.get_id(new_user.email)
         """ Agregar Error handler """
         if exist is not None:
-            return jsonify({'error': 'Este correo ya esta en uso'}), 404
+            return jsonify({'error': 'Este correo ya esta en uso'}), 400
         else:
             Users.create_user(new_user) 
             return jsonify({'message': 'Usuario creado exitosamente'}), 201 
@@ -74,7 +74,7 @@ class UserController:
             Users.update_user(user_id, user)
             return jsonify({'message': 'Usuario actualizado exitosamente'}), 200
         else:
-            return jsonify({'error': 'No tienes los permisos para actualizar a este usuario'}), 400
+            return jsonify({'error': 'No tienes los permisos para actualizar a este usuario'}), 403
     
     """ Funcion para borrar usuario con su ID """
     @classmethod
@@ -83,7 +83,7 @@ class UserController:
             Users.delete_user(user_id)
             return {}, 204
         else:
-            return jsonify({'error': 'No tienes los permisos para borrar a este usuario'}), 400
+            return jsonify({'error': 'No tienes los permisos para borrar a este usuario'}), 403
     """ Funcion para logear a un usuario con su username y login_password, agregar manejo de sesiones """
 
     @classmethod
@@ -143,6 +143,6 @@ class UserController:
          if result :   
             Users.update_password(session.get('user_id'), data['new_password'])
             
-            return jsonify({'message': 'Inicio de sesion con exito'}), 200
+            return jsonify({'message': 'Cambio de contraseña con exito'}), 200
          else: 
-            return jsonify({'error': 'No se pudo iniciar sesion'}), 404
+            return jsonify({'error': 'No se pudo cambiar la contraseña'}), 403

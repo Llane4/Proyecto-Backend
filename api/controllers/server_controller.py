@@ -18,7 +18,7 @@ class ServerController:
             'icon': ""
         }), 200
         else:
-            return jsonify({'message': 'Servidor no encontrado'}), 404
+            return jsonify({'error': 'Servidor no encontrado'}), 404
 
     """ Funcion para conseguir todos los servers """
     @classmethod    
@@ -37,7 +37,7 @@ class ServerController:
             return jsonify(
         serverlist), 200
         else:
-            return jsonify({'message': 'Servidor no encontrado'}), 404
+            return jsonify({'error': 'Servidor no encontrado'}), 404
 
     """ Funcion para crear un server, los datos de este se envian en un JSON """ 
     @classmethod
@@ -109,4 +109,4 @@ class ServerController:
             return jsonify(
         serverlist), 200
         else:
-            return jsonify({'message': 'Servidor no encontrado'}), 404
+            return jsonify({'error': 'Servidor no encontrado'}), 404

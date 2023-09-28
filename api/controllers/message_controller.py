@@ -52,7 +52,7 @@ class Message_Controller:
             send_day=data['send_day']
         )
         Message.send_message(new_message) 
-        return jsonify({'message': 'Usuario añadido exitosamente en el servidor'}), 201 
+        return jsonify({'message': 'Se envio el mensaje con exito'}), 201 
     
     """ Funcion para mandar mensajes a un canal """
     @classmethod    
@@ -78,7 +78,7 @@ class Message_Controller:
             Message.delete_message(message_id)
             return {}, 204
         else:
-            return jsonify({"error": "No tiene permisos para borrar este mensaje"}), 404
+            return jsonify({"error": "No tiene permisos para borrar este mensaje"}), 403
         
     """ Borrar mensaje canales"""
     @classmethod 
@@ -89,7 +89,7 @@ class Message_Controller:
             Message.delete_message_channel(message_id)
             return jsonify({"message": "Se borro el mensaje"}), 200
         else:
-            return jsonify({"error": "No tiene permisos para borrar este mensaje"}), 404
+            return jsonify({"error": "No tiene permisos para borrar este mensaje"}), 403
         
 
     """ Editar mensaje """
@@ -108,5 +108,5 @@ class Message_Controller:
             Message.edit_message(message_id, new_message)
             return {}, 204
         else:
-            return jsonify({'error': "No tienes los permisos para editar este mensaje"}), 400
+            return jsonify({'error': "No tienes los permisos para editar este mensaje"}), 403
 
