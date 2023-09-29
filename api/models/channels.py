@@ -23,7 +23,7 @@ class Channel:
         query = "SELECT name_channel, owner_id, channel_id FROM server_channel JOIN discord.channel ON discord.channel.id = discord.server_channel.channel_id WHERE server_id=%s;"
         params = (server_id,)
         results = DatabaseConnection.fetch_all(query, params)
-        print(results)
+       
         if results is not None:
             messages=[]
             for result in results:
@@ -47,9 +47,10 @@ class Channel:
             cursor=DatabaseConnection.get_connection().cursor()
             cursor.execute(query, params)
             channel_id = cursor.lastrowid
-        except:
-            print("ID DEL CANAL", channel_id)
-        print("ID", channel_id)
+        finally:
+            if cursor:
+                cursor.close()
+      
         new_query="INSERT INTO server_channel (server_id, channel_id) VALUES(%s, %s)"
         new_params=(server_id, channel_id)
         DatabaseConnection.execute_query(new_query, new_params)

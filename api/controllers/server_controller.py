@@ -23,7 +23,7 @@ class ServerController:
     """ Funcion para conseguir todos los servers """
     @classmethod    
     def get_servers(cls):
-        print("LLEga a get_servers")
+       
         servers=Servers.get_servers()
         if servers:
             serverlist=[]
@@ -43,7 +43,7 @@ class ServerController:
     @classmethod
     def create_server(cls):
         data = request.json
-        print(data)
+        
         if is_logged():
             new_server = Servers(
                 name_server=data['name_server'],

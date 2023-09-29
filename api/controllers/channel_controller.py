@@ -11,7 +11,7 @@ class Channel_Controller:
         if channels:
             channellist=[]
             for channel in channels:
-                print(channel)
+             
                 aux={
             'channel_id': channel.id,
             'name_channel': channel.name_channel,
@@ -27,6 +27,7 @@ class Channel_Controller:
     @classmethod
     def create_channel(cls):
         data = request.json
+        print(data)
         if is_logged():
             new_channel= Channel(
                 name_channel=data['name_channel'],

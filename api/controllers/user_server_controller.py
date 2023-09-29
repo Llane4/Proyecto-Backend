@@ -11,7 +11,7 @@ class User_Server_Controller:
             user_list=[]
             
             for user in users:
-                print("USEEEEEEEEEEER",user)
+              
                 aux={
                     'server_id': user[0].server_id,
                     'user_id':user[0].user_id,
@@ -31,7 +31,7 @@ class User_Server_Controller:
                 user_id=session.get('user_id')
             )
             exist=User_Server.get_user(new_user_in_server)
-            print(exist)
+            
             if exist== False:                
                 return jsonify({'error': 'No se pudo añadir al usuario'}), 400
             else:
@@ -42,15 +42,14 @@ class User_Server_Controller:
     
     @classmethod
     def get_my_servers(cls):
-        sesion=session.get('email')
-        print(sesion)
+        
         if is_logged(): 
             users=User_Server.get_my_servers()
             if users:
                 user_list=[]
             
                 for user in users:
-                    print("USEEEEEEEEEEER",user)
+                    
                     aux={
                         'server_id': user[0].server_id,
                         'user_id':user[0].user_id,

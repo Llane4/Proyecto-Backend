@@ -35,8 +35,11 @@ class DatabaseConnection:
     
     @classmethod
     def fetch_all(cls, query, params=None):
-        cursor=cls.get_connection().cursor()
+        cursor=None
+        
         try:
+            connection=cls.get_connection()
+            cursor=connection.cursor()
             cursor.execute(query, params)
             return cursor.fetchall()
         finally:

@@ -23,11 +23,11 @@ class Message_Controller:
     """ Funcion para conseguir todos los mensajes de un canal """
     @classmethod
     def get_channel_messages(cls, receiver_id):
-        print("Receiver_id", receiver_id)
+       
         messages=Message.get_messages_channel(receiver_id)
         if messages:
             messages_list=[]
-            print("MENSAJES", messages)
+          
             for message in messages:
                 aux={
                     'content': message[0].content,
@@ -73,7 +73,7 @@ class Message_Controller:
     @classmethod 
     def delete_message(cls, message_id):   
         sender_id=Message.get_sender_id(message_id)
-        print(sender_id, session['user_id'])
+       
         if is_logged() and verify_user(sender_id):
             Message.delete_message(message_id)
             return {}, 204
@@ -84,7 +84,7 @@ class Message_Controller:
     @classmethod 
     def delete_message_channel(cls, message_id):   
         sender_id=Message.get_sender_id_channel(message_id)
-        print(sender_id, session['user_id'])
+        
         if is_logged() and verify_user(sender_id):
             Message.delete_message_channel(message_id)
             return jsonify({"message": "Se borro el mensaje"}), 200

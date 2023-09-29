@@ -23,7 +23,7 @@ class Servers:
             return None
         
     def get_servers():
-        print("LLEGA A GET SERVERS")
+       
         query = "SELECT id, name_server, owner_id, icon FROM server;"
         results = DatabaseConnection.fetch_all(query)
 

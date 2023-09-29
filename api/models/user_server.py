@@ -13,7 +13,7 @@ class User_Server:
         params = (server_id,)
         results = DatabaseConnection.fetch_all(query, params)
         if results is not None:
-            print("USERR", results[0][0])
+         
             users=[]
             for result in results:
                 users.append((
@@ -32,9 +32,9 @@ class User_Server:
         query = """SELECT server_id, user_id FROM user_server
                    WHERE server_id = %s AND user_id= %s;"""
         params = (new_user_in_server.server_id, new_user_in_server.user_id)
-        print(params)
+     
         results = DatabaseConnection.fetch_one(query, params)
-        print("UN USUARIO?", results)
+    
         if results is None:
             return True
         else:
@@ -47,14 +47,13 @@ class User_Server:
         DatabaseConnection.execute_query(query, params)
 
     def get_my_servers():
-        print(session)
         query = """SELECT server_id, user_id, name_server, icon FROM user_server
                    JOIN discord.server ON discord.server.id = discord.user_server.server_id
                    WHERE user_id = %s;"""
         params = (session['user_id'],)
         results = DatabaseConnection.fetch_all(query, params)
         if results is not None:
-            print("USERR", results[0][0])
+      
             users=[]
             for result in results:
                 users.append((

@@ -88,7 +88,7 @@ class UserController:
 
     @classmethod
     def login_user(cls):
-        print("Intento de login")
+       
         data=request.json
         user=Users(
             username="",

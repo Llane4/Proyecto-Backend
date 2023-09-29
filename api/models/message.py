@@ -22,7 +22,7 @@ class Message:
                         send_day=result[1],
                 ))
 
-            print("ESTO ES ARRAY?",messages)
+         
             return messages
             
         else:
@@ -37,7 +37,7 @@ class Message:
         if results is not None:
             messages=[]
             for result in results:
-                print(result[1])
+               
                 date = str(result[1])
                 messages.append((
                     Message(
@@ -79,7 +79,7 @@ class Message:
         DatabaseConnection.execute_query(query, params)    
 
     def send_to_channel(new_message):
-        print("ENtra aqui")
+       
         query = "INSERT INTO channel_message (sender_id, receiver_id, content, send_day) VALUES (%s,%s,%s,NOW());"
         params = (new_message.sender_id, new_message.receiver_id, new_message.content)
         DatabaseConnection.execute_query(query, params) 
@@ -98,7 +98,7 @@ class Message:
     def edit_message(message_id, content):
         query= "UPDATE message SET content=%s, edited=NOW() WHERE id=%s"
         params=(content.content, message_id,  )
-        print(content.content)
+       
         DatabaseConnection.execute_query(query, params)
 
 
